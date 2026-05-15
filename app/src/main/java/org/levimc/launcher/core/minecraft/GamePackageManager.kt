@@ -39,7 +39,6 @@ class GamePackageManager private constructor(private val context: Context, priva
         "libPlayFabMultiplayer.so",
         "libmaesdk.so",
         "libpairipcore.so",
-        "libgxcore.so",
 
     )
 
