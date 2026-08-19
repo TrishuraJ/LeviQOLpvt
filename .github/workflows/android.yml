@@ -59,11 +59,9 @@ jobs:
         run: echo "curseforge.api_key=${CF_API_KEY}" >> local.properties
 
       - name: Build Unsigned Release APKs
-        if: env.HAS_GOOGLE_SERVICES == 'false'
         run: ./gradlew assembleRelease
 
       - name: Sign Release APK
-        if: env.HAS_GOOGLE_SERVICES == 'false' && startsWith(github.ref, 'refs/tags/')
         uses: kevin-david/zipalign-sign-android-release@v2
         id: sign_app
         with:
@@ -77,7 +75,6 @@ jobs:
           BUILD_TOOLS_VERSION: "35.0.0"
 
       - name: Rename APK with tag
-        if: env.HAS_GOOGLE_SERVICES == 'false' && startsWith(github.ref, 'refs/tags/')
         run: |
           SIGNED_APK="${{ steps.sign_app.outputs.signedReleaseFile }}"
           APK_DST="LeviLauncher-${{ github.ref_name }}-release.apk"
@@ -85,14 +82,12 @@ jobs:
           echo "Signed APK renamed to $APK_DST"
 
       - name: Upload Signed APK Artifact
-        if: env.HAS_GOOGLE_SERVICES == 'false' && startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4.6.2
         with:
           name: LeviLauncher-${{ github.ref_name }}-release.apk
           path: LeviLauncher-${{ github.ref_name }}-release.apk
 
       - name: Release APK to GitHub Releases
-        if: env.HAS_GOOGLE_SERVICES == 'false' && startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: LeviLauncher-${{ github.ref_name }}-release.apk
